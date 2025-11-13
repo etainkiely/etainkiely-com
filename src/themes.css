@@ -1,0 +1,26 @@
+:root {
+  /* teal theme (default) */
+  --color-primary: #0b1220; /* deep navy background */
+  --color-accent: #14b8a6;  /* teal */
+  --color-surface: rgba(255,255,255,0.04);
+  --color-ink: #e6eef2;     /* slate-ish light */
+  --color-muted: #94a3b8;   /* slate-400 */
+}
+
+/* alternate: green + gold */
+.theme-gold {
+  --color-primary: #081316; /* slightly different deep base */
+  --color-accent: #b58b00;  /* warm gold */
+  --color-surface: rgba(255,250,240,0.03);
+  --color-ink: #fffaf0;
+  --color-muted: #c6b58c;
+}
+
+/* helper mappings so components can still rely on simple vars */
+:root {
+  --bg: var(--color-primary);
+  --accent: var(--color-accent);
+  --surface: var(--color-surface);
+  --ink: var(--color-ink);
+  --muted: var(--color-muted);
+}

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Palette switcher — Teal vs Green+Gold preview</title>
+  <style>
+    /* Reset-ish */
+    :root {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *, *::before, *::after { box-sizing: inherit; }
+
+    /* Theme variables: default = teal theme */
+    :root {
+      --bg: #0b1220;            /* deep navy */
+      --surface: rgba(255,255,255,0.04);
+      --card: rgba(255,255,255,0.05);
+      --text: #E6EEF2;
+      --muted: #94A3B8;
+      --accent: #14B8A6;        /* teal */
+      --accent-700: #0f9385;
+      --accent-100: rgba(20,184,166,0.12);
+      --cta-text: #071019;      /* dark text on teal CTA */
+    }
+
+    /* Alternate: green+gold theme when .theme-gold is on <html> */
+    .theme-gold {
+      --bg: #081316;           /* slightly different deep base */
+      --surface: rgba(255,250,240,0.03);
+      --card: rgba(255,250,240,0.04);
+      --text: #fffaf0;
+      --muted: #C6B58C;
+      --accent: #B58B00;       /* warm gold */
+      --accent-700: #8e6f00;
+      --accent-100: rgba(181,139,0,0.12);
+      --cta-text: #11100b;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 92%, black 8%), var(--bg));
+      color: var(--text);
+      background-color: var(--bg);
+      padding: 36px;
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .panel {
+      width: min(980px, 96vw);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 12px;
+    }
+
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: 1.5rem;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    p.lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display:flex;
+      gap: 8px;
+      align-items:center;
+    }
+
+    .btn {
+      cursor: pointer;
+      border: 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      background: transparent;
+      color: var(--text);
+      box-shadow: none;
+      transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .btn:active { transform: translateY(1px); }
+
+    .btn--accent {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 92%, black 8%), var(--accent));
+      color: var(--cta-text);
+      border: none;
+      box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 20%, black 80%);
+    }
+
+    .swatches {
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .swatch {
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.04);
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .swatch .dot {
+      width:44px;
+      height:44px;
+      border-radius:8px;
+      flex: 0 0 44px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .swatch .meta { font-size:0.85rem; color:var(--muted); }
+    .swatch .meta b { color:var(--text); display:block; }
+
+    /* sample layout to preview hero + card */
+    .sample {
+      margin-top: 22px;
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap: 18px;
+      align-items:start;
+    }
+    .hero {
+      padding: 18px;
+      background: linear-gradient(180deg, var(--surface), rgba(0,0,0,0));
+      border-radius: 12px;
+    }
+    .hero h2 { margin: 0; font-size: 1.25rem; }
+    .hero p { color: var(--muted); margin-top: 8px; }
+
+    .card {
+      padding: 18px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.26), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.04);
+      color: var(--muted);
+    }
+
+    .cta {
+      margin-top: 12px;
+      display:inline-block;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-700));
+      color: var(--cta-text);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* small accessibility helper */
+    .visually-hidden { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+    /* footer */
+    .footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 820px) {
+      .sample { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="panel" role="region" aria-label="Palette preview panel">
+    <div class="header">
+      <div>
+        <h1>Palette preview — Teal vs Green+Gold</h1>
+        <p class="lead">Use the controls to switch the theme live. The preview shows typical UI surfaces (background, cards, buttons).</p>
+      </div>
+
+      <div class="controls" role="toolbar" aria-label="Theme controls">
+        <button id="btn-teal" class="btn" title="Teal (default)">Teal</button>
+        <button id="btn-gold" class="btn" title="Green + Gold">Gold</button>
+        <button id="btn-auto" class="btn" title="Follow system / localStorage">Auto</button>
+        <button id="btn-reset" class="btn" title="Reset stored preference">Reset</button>
+      </div>
+    </div>
+
+    <div class="swatches" aria-hidden="false">
+      <div class="swatch">
+        <div class="dot" id="sw-bg" style="background:var(--bg)"></div>
+        <div class="meta"><b>Background</b><span id="hex-bg">#0b1220</span></div>
+      </div>
+      <div class="swatch">
+        <div class="dot" id="sw-accent" style="background:var(--accent)"></div>
+        <div class="meta"><b>Accent</b><span id="hex-accent">#14B8A6</span></div>
+      </div>
+      <div class="swatch">
+        <div class="dot" id="sw-text" style="background:var(--text)"></div>
+        <div class="meta"><b>Text</b><span id="hex-text">#E6EEF2</span></div>
+      </div>
+      <div class="swatch">
+        <div class="dot" id="sw-muted" style="background:var(--muted)"></div>
+        <div class="meta"><b>Muted</b><span id="hex-muted">#94A3B8</span></div>
+      </div>
+    </div>
+
+    <div class="sample" aria-live="polite">
+      <div class="hero" role="article" aria-label="Hero preview">
+        <h2>Mathematics, Dialogue, and Agency in the Age of AI</h2>
+        <p>Freire-informed computational mathematics where learners author models, critique assumptions, and act with care.</p>
+        <a class="cta" href="#learn">Why Freire × AI</a>
+      </div>
+
+      <aside class="card" role="complementary" aria-label="Identity card">
+        <strong style="color:var(--text)">Studio-based labs</strong>
+        <p style="margin:8px 0 0 0;">Mastery with reflective practice, project work that serves community.</p>
+        <div style="margin-top:12px;">
+          <button class="btn" style="background:var(--accent-100); color:var(--text); border:1px solid rgba(255,255,255,0.04);">Learn more</button>
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">
+      <div>Theme persisted in localStorage. Accessible contrast and preview-only UI.</div>
+    </div>
+  </div>
+
+  <script>
+    // Palette definitions (for display hex values)
+    const palettes = {
+      teal: {
+        bg: '#0b1220',
+        accent: '#14B8A6',
+        text: '#E6EEF2',
+        muted: '#94A3B8'
+      },
+      gold: {
+        bg: '#081316',
+        accent: '#B58B00',
+        text: '#FFFaf0',
+        muted: '#C6B58C'
+      }
+    };
+
+    const rootEl = document.documentElement;
+    const btnTeal = document.getElementById('btn-teal');
+    const btnGold = document.getElementById('btn-gold');
+    const btnAuto = document.getElementById('btn-auto');
+    const btnReset = document.getElementById('btn-reset');
+
+    const updateSwatches = (pal) => {
+      document.getElementById('hex-bg').textContent = pal.bg;
+      document.getElementById('hex-accent').textContent = pal.accent;
+      document.getElementById('hex-text').textContent = pal.text;
+      document.getElementById('hex-muted').textContent = pal.muted;
+      // update swatch dot backgrounds (they use CSS variables, but update inline for clarity)
+      document.getElementById('sw-bg').style.background = getComputedStyle(rootEl).getPropertyValue('--bg').trim();
+      document.getElementById('sw-accent').style.background = getComputedStyle(rootEl).getPropertyValue('--accent').trim();
+      document.getElementById('sw-text').style.background = getComputedStyle(rootEl).getPropertyValue('--text').trim();
+      document.getElementById('sw-muted').style.background = getComputedStyle(rootEl).getPropertyValue('--muted').trim();
+    };
+
+    function setTheme(themeName, persist = true) {
+      if (themeName === 'gold') {
+        rootEl.classList.add('theme-gold');
+      } else {
+        rootEl.classList.remove('theme-gold');
+      }
+
+      if (persist) {
+        localStorage.setItem('preferredTheme', themeName);
+      }
+      updateSwatches(palettes[themeName === 'gold' ? 'gold' : 'teal']);
+    }
+
+    btnTeal.addEventListener('click', () => setTheme('teal'));
+    btnGold.addEventListener('click', () => setTheme('gold'));
+    btnReset.addEventListener('click', () => {
+      localStorage.removeItem('preferredTheme');
+      applyInitialTheme();
+    });
+
+    btnAuto.addEventListener('click', () => {
+      // follow system preference for dark/light? we'll just reset to auto which means 'follow stored or system'
+      localStorage.removeItem('preferredTheme');
+      applyInitialTheme();
+    });
+
+    function applyInitialTheme() {
+      const stored = localStorage.getItem('preferredTheme');
+      if (stored === 'gold') { setTheme('gold', false); }
+      else if (stored === 'teal') { setTheme('teal', false); }
+      else {
+        // No stored preference: prefer teal by default; if system has no color-scheme, keep teal
+        // You can detect prefers-color-scheme if you want to alter for light/dark variants
+        setTheme('teal', false);
+      }
+    }
+
+    // Initialize
+    applyInitialTheme();
+  </script>
+</body>
+</html>
