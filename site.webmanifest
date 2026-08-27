@@ -1,0 +1,15 @@
+{
+  "name": "Noticing Maths \u2014 Etain Kiely",
+  "short_name": "Noticing Maths",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e6dbc2",
+  "theme_color": "#526652",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
